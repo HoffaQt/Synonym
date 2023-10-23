@@ -8,7 +8,7 @@ import { Synonym } from '../models/synonymModel';
 export const createSynonym = (req: Request, res: Response) => {
   
   const synonym: Synonym = {
-    group: req.body.group,
+    groupId: req.body.group,
     word: req.body.word
   };
   

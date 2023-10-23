@@ -4,10 +4,8 @@ import { Synonym } from '../models/synonymModel';
 import { createSynonym, getSynonyms, getSynonymbyWord, updateSynonym, deleteSynonym } from '../controllers/synonymController';
 
 const router = Router();
-let synonyms: Synonym[] = [];
 
 const synonymWordValidationRules = [
-  body('group').isInt(),
   body('word').notEmpty().isString().isLength({ min: 1, max: 45 })
 ];
 
