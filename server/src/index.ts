@@ -1,6 +1,9 @@
 import express, { Request, Response, NextFunction } from 'express';
 import Logger from './config/logger';
-import synonymRouter from './routes/synonymRoute';
+import config from './config/config';
+import synonymRouter from './routes/synonym.route';
+
+
 
 const app = express();
 const port = process.env.PORT || 3000;

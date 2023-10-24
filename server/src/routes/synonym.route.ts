@@ -1,12 +1,13 @@
 import { Router, Request, Response } from 'express';
 import { body, validationResult } from 'express-validator';
-import { Synonym } from '../models/synonymModel';
-import { createSynonym, getSynonyms, getSynonymbyWord, updateSynonym, deleteSynonym } from '../controllers/synonymController';
+import { Synonym } from '../models/synonym.model';
+import { createSynonym, getSynonyms, getSynonymbyWord, updateSynonym, deleteSynonym } from '../controllers/synonym.controller';
 
 const router = Router();
 
 const synonymWordValidationRules = [
-  body('word').notEmpty().isString().isLength({ min: 1, max: 45 })
+  body('id').optional().isInt(),
+  body('word').notEmpty().isString().isLength({ min: 0, max: 45 })
 ];
 
 router.post('/', synonymWordValidationRules ,(req: Request, res: Response) => {

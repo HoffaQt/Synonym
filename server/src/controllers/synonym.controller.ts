@@ -1,13 +1,12 @@
 import { Request, Response } from 'express';
-import { body, validationResult } from 'express-validator';
-import { Synonym } from '../models/synonymModel';
-import { addSynonym } from '../services/synonymService';
+import { Synonym } from '../models/synonym.model';
+import { addSynonym } from '../services/synonym.service';
 
 
 //POST '/'
 export const createSynonym = (req: Request, res: Response) => {
   
-  addSynonym(req.body.word, req.body.synonym);
+  addSynonym(req.body.id, req.body.word);
   
   res.sendStatus(201);
 };
