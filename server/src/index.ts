@@ -1,10 +1,12 @@
 import express, { Request, Response, NextFunction } from 'express';
+import Logger from './config/logger';
 import synonymRouter from './routes/synonymRoute';
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(express.json());
+
 app.use('/synonym', synonymRouter);
 
 app.get('/', (req: Request, res: Response) => {

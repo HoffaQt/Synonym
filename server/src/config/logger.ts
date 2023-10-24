@@ -1,9 +1,9 @@
 import path from 'path';
 import winston from 'winston';
 
-class LoggerGlobal {
+class Logger {
   private readonly _logger: winston.Logger;
-  private static _instance: LoggerGlobal;
+  private static _instance: Logger;
   
   private constructor() {
     this._logger = winston.createLogger({
@@ -27,7 +27,7 @@ class LoggerGlobal {
         return this._instance;
     }
 
-    this._instance = new LoggerGlobal();
+    this._instance = new Logger();
     return this._instance;
   }
   
@@ -36,4 +36,4 @@ class LoggerGlobal {
   }
   
 }
-export default LoggerGlobal;
+export default Logger;
