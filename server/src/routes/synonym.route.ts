@@ -1,55 +1,14 @@
 import { Router, Request, Response } from 'express';
 import { body, validationResult } from 'express-validator';
-import { Synonym } from '../models/synonym.model';
-import { createSynonym, getSynonyms, getSynonymbyWord, updateSynonym, deleteSynonym } from '../controllers/synonym.controller';
+import { createSynonym, getSynonyms, getSynonymsByWord, updateSynonym, deleteSynonym } from '../controllers/synonym.controller';
 
-const router = Router();
-
-const synonymWordValidationRules = [
-  body('id').optional().isInt(),
-  body('word').notEmpty().isString().isLength({ min: 0, max: 45 })
-];
-
-router.post('/', synonymWordValidationRules ,(req: Request, res: Response) => {
-  const errors = validationResult(req);
+export const routes = (router: Router) => {
   
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
+  router.post('/api/synonyms', createSynonym);
   
-  createSynonym(req, res);
-});
-
-router.get('/', getSynonyms);
-
-router.get('/:word', synonymWordValidationRules,(req: Request, res: Response) => {
-  const errors = validationResult(req);
+  router.get('/api/synonyms', getSynonyms);
   
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
+  router.get('/api/synonyms/:id/words', getSynonymsByWord);
   
-  getSynonymbyWord(req, res);
-});
-
-router.put('/:word', synonymWordValidationRules, (req: Request, res: Response) => {
-  const errors = validationResult(req);
-  
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-  
-  updateSynonym(req, res);
-});
-
-router.delete('/:id', synonymWordValidationRules, (req: Request, res: Response) => {
-  const errors = validationResult(req);
-  
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-  
-  deleteSynonym(req, res);
-});
-
-export default router;
+  router.put('/api/synonyms/:id', updateSynonym);
+}

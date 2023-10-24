@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import { Synonym } from '../models/synonym.model';
 import { addSynonym } from '../services/synonym.service';
 
 
@@ -17,7 +16,7 @@ export const getSynonyms = (req: Request, res: Response) => {
 };
 
 //GET '/:word'
-export const getSynonymbyWord = (req: Request, res: Response) => {
+export const getSynonymsByWord = (req: Request, res: Response) => {
   const synonym = "" //synonyms.find((synonym) => synonym.word === req.params.word);
   
   if (!synonym) {
