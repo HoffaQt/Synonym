@@ -1,38 +1,55 @@
 import { Request, Response } from 'express';
-import { addSynonym } from '../services/synonym.service';
+import SynonymRepository from '../repositories/synonym.repository';
+import { jsonParser, setToArray } from '../helper/data.helper';
 
+export default class SynonymController {
 
-//POST '/'
-export const createSynonym = (req: Request, res: Response) => {
-  
-  addSynonym(req.body.id, req.body.word);
-  
-  res.sendStatus(201);
-};
+  getSynonymsByWord(req: Request, res: Response) {
+    const response: Set<string> = SynonymRepository.getInstance().getSynonyms(req.params.search);
 
-//GET '/'
-export const getSynonyms = (req: Request, res: Response) => {
-  res.json([]);
-};
-
-//GET '/:word'
-export const getSynonymsByWord = (req: Request, res: Response) => {
-  const synonym = "" //synonyms.find((synonym) => synonym.word === req.params.word);
-  
-  if (!synonym) {
-    res.sendStatus(404);
+    res.status(200).json({
+      message: "get OK",
+      reqBody: req.body,
+      data: jsonParser(response ?? new Set<string>())
+    });
   }
-  res.json(synonym);
-};
 
-//PUT '/:word'
-export const updateSynonym = (req: Request, res: Response) => {
+  createSynonym(req: Request, res: Response) {
+    const response: Set<string> = SynonymRepository.getInstance().addSynonym(req.params.newWord, req.params.existingWord);
 
-  res.sendStatus(204);
-};
+    res.status(201).json({
+      message: "create OK",
+      reqBody: req.body,
+      data: jsonParser(response ?? new Set<string>())
+    });
+  }
 
-//DELETE '/:id'
-export const deleteSynonym = (req: Request, res: Response) => {
+  createWord(req: Request, res: Response) {
+    const response: string = SynonymRepository.getInstance().addWord(req.params.newWord);
 
-  res.sendStatus(204);
-};
+    res.status(201).json({
+      message: "create OK",
+      reqBody: req.body,
+      data: response
+    });
+  }
+
+  updateSynonym(req: Request, res: Response) {
+    const response: Set<string> = SynonymRepository.getInstance().updateSynonym(req.params.wordToBeUpdated, req.params.synonymWord);
+
+    res.status(200).json({
+      message: "update OK",
+      reqBody: req.body,
+      data: jsonParser(response ?? new Set<string>())
+    });
+  }
+
+  deleteWord(req: Request, res: Response) {
+    SynonymRepository.getInstance().deleteWord(req.params.word);
+
+    res.status(204).json({
+      message: "delete OK",
+      reqBody: req.body
+    });
+  }
+}

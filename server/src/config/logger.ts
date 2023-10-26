@@ -1,38 +1,27 @@
-import path from 'path';
 import winston from 'winston';
 
 class Logger {
-  private readonly _logger: winston.Logger;
-  private static _instance: Logger;
+  private static instance: Logger;
+  public readonly logger: winston.Logger;
   
   private constructor() {
-    this._logger = winston.createLogger({
-      level: 'info',
+    this.logger = winston.createLogger({
+      level: 'debug',
       format: winston.format.combine(
       winston.format.json(),
       winston.format.timestamp()
       ),
       transports: [
         new winston.transports.Console(),
-        new winston.transports.File({ 
-            filename: path.join(__dirname,'../../logs/combined.log'),
-            level: 'info',
-        }),
       ],
     });
   }
   
-  static getInstance() {
-    if (this._instance) {
-        return this._instance;
+  static getInstance(): Logger {
+    if (!this.instance) {
+      this.instance = new Logger();
     }
-
-    this._instance = new Logger();
-    return this._instance;
-  }
-  
-  public get logger() {
-    return this._logger;
+    return this.instance;
   }
   
 }
