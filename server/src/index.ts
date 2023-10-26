@@ -1,21 +1,23 @@
 import express, { Application } from 'express';
-import cors, { CorsOptions } from 'cors';
+import cors from 'cors';
 import Routes from './routes';
+import { notFoundError, developmentError, productionError } from './middleware/errors.middleware';
 
-export default class Server {
-    constructor(app: Application) {
-        this.config(app);
-        new Routes(app);
-    }
+// Seperate the app from the server configuration for
+// seperation of concerns, maintainability and ease of testing
+const app: Application = express();
+app.use(express.json());
+new Routes(app);
 
-    private config(app: Application): void {
-        const corsOptions: CorsOptions = {
-            origin: process.env.API_URL || 'http://localhost:8080',
-            optionsSuccessStatus: 200,
-            methods: ['GET', 'POST', 'PUT', 'DELETE']
-        };
+app.use(cors({
+    origin: process.env.API_URL || 'http://localhost:8080',
+    optionsSuccessStatus: 200,
+    methods: ['GET', 'POST', 'PUT', 'DELETE']
+}));
 
-        app.use(cors(corsOptions));
-        app.use(express.json());
-    }
-}
+// Error handlers
+app.use(notFoundError);
+app.use(developmentError);
+app.use(productionError);
+
+export default app;

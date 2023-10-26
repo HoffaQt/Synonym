@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import SynonymRepository from '../repositories/synonym.repository';
-import { jsonParser, setToArray } from '../helper/data.helper';
 
 export default class SynonymController {
 
@@ -10,7 +9,7 @@ export default class SynonymController {
     res.status(200).json({
       message: "get OK",
       reqBody: req.body,
-      data: jsonParser(response ?? new Set<string>())
+      data: Array.from(response ?? new Set<string>())
     });
   }
 
@@ -20,7 +19,7 @@ export default class SynonymController {
     res.status(201).json({
       message: "create OK",
       reqBody: req.body,
-      data: jsonParser(response ?? new Set<string>())
+      data: Array.from(response ?? new Set<string>())
     });
   }
 
@@ -40,7 +39,7 @@ export default class SynonymController {
     res.status(200).json({
       message: "update OK",
       reqBody: req.body,
-      data: jsonParser(response ?? new Set<string>())
+      data: Array.from(response ?? new Set<string>())
     });
   }
 
