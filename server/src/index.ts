@@ -8,11 +8,13 @@ import { routeNotFoundError, serverError } from './middleware/errors.middleware'
 const app: Application = express();
 const originUrl = process.env.API_URL + ':' + process.env.PORT || 'http://localhost:8080';
 app.use(express.json());
-app.use(cors({
+app.use(
+  cors({
     origin: originUrl,
     optionsSuccessStatus: 200,
-    methods: ['GET', 'POST', 'PUT', 'DELETE']
-}));
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  })
+);
 
 new Routes(app);
 

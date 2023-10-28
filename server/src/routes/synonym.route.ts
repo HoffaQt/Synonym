@@ -6,7 +6,7 @@ class SynonymRoutes {
   controller = new SynonymController();
 
   constructor() {
-      this.intializeRoutes();
+    this.intializeRoutes();
   }
 
   intializeRoutes() {
@@ -16,7 +16,7 @@ class SynonymRoutes {
     // Retrieve all words
     this.router.get('/', this.controller.getAllWords);
 
-    // Create a new word and add synonym with existing words
+    // Create a new word and create synonym with existing words
     this.router.post('/synonym', this.controller.createSynonym);
 
     // Create a new word without synonyms
