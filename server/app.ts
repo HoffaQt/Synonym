@@ -1,7 +1,7 @@
-import { Application } from 'express';
-import appInit from "./src/index";
+import appInit from './src/index';
+import 'dotenv/config';
 
-const app: Application = appInit;
+const app = appInit;
 const port = process.env.PORT || 8080;
 
 app.listen(port, () => {

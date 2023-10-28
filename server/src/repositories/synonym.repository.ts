@@ -1,5 +1,4 @@
-
-import Logger from '../config/logger';
+import Logger from '../utils/logger.util';
 
 class SynonymRepository {
   private static instance: SynonymRepository;
@@ -15,16 +14,20 @@ class SynonymRepository {
   }
 
   public addWord = (newWord: string): string => {
-    if (this.synonymMap.has(newWord)) throw new Error(newWord + " already exists!");
+    if (this.synonymMap.has(newWord)) throw new Error(newWord + ' already exists!');
 
     this.synonymMap.set(newWord, new Set<string>().add(newWord));
     return newWord;
   }
   
+  public getAllWords = (): Set<string> => {
+    return new Set<string>(this.synonymMap.keys());
+  }
+  
   //Add a new word to an existing synonym
   public addSynonym = (newWord: string, existingWord: string): Set<string>  => {
-    if (!this.synonymMap.has(existingWord)) throw new Error("Server error!"); // Should never happen
-    if (this.synonymMap.has(newWord)) throw new Error(newWord + " already exists!");
+    if (!this.synonymMap.has(existingWord)) throw new Error('Server error!'); // Should never happen
+    if (this.synonymMap.has(newWord)) throw new Error(newWord + ' already exists!');
     
     let existingSynonymSet = this.synonymMap.get(existingWord);
 
@@ -32,7 +35,7 @@ class SynonymRepository {
       this.synonymMap.set(newWord, existingSynonymSet);
       existingSynonymSet.add(newWord);
       
-      if (process.env.NODE_ENV === 'dev') {
+      if (process.env.NODE_ENV === 'development') {
         this.synonymMap.get(existingWord)?.has(newWord) ? Logger.getInstance().logger.debug('newWord is in the set') : Logger.getInstance().logger.debug('newWord is NOT in the set');
         if (this.synonymMap.get(existingWord) === this.synonymMap.get(newWord)) Logger.getInstance().logger.debug('They have the same reference');
       }
@@ -44,7 +47,7 @@ class SynonymRepository {
       this.synonymMap.set(existingWord, newSynonymSet);
       this.synonymMap.set(newWord, newSynonymSet);
 
-      if (process.env.NODE_ENV === 'dev') {
+      if (process.env.NODE_ENV === 'development') {
         Logger.getInstance().logger.debug('synonymMap entries: ' + this.synonymMap.size);
         if (this.synonymMap.get(existingWord) === this.synonymMap.get(newWord)) Logger.getInstance().logger.debug('They have the same reference');
       }
@@ -53,30 +56,37 @@ class SynonymRepository {
     }
   }
 
-  public getSynonyms = (search: string): Set<string> => {
-    if (!this.synonymMap.has(search)) throw new Error(`${search} not found`); // Return empty set instead?
+  public getSynonyms = (word: string): Set<string> => {
+    if (!this.synonymMap.has(word)) throw new Error(`${word} not found`);
     
-    return this.synonymMap.get(search)!;
+    return this.synonymMap.get(word)!;
   }
 
   public updateSynonym = (wordToBeUpdated: string, synonymWord: string): Set<string> => {
-    if (!this.synonymMap.has(wordToBeUpdated)) throw new Error(wordToBeUpdated + " not found");
-    if (!this.synonymMap.has(synonymWord)) throw new Error(synonymWord + " not found");
+    if (!this.synonymMap.has(wordToBeUpdated)) throw new Error(wordToBeUpdated + ' not found');
+    if (synonymWord === '') {}// Allow empty synonymWord
+    else if (!this.synonymMap.has(synonymWord)) throw new Error(synonymWord + ' not found');
 
+    let newSynonymSet: Set<string>;
     this.synonymMap.delete(wordToBeUpdated);
-    let newSynonymSet = this.synonymMap.get(synonymWord)!;
-    this.synonymMap.set(wordToBeUpdated, newSynonymSet);
-
+    
+    if (synonymWord === '') {
+      this.synonymMap.set(wordToBeUpdated, new Set<string>().add(wordToBeUpdated));
+      newSynonymSet = this.synonymMap.get(wordToBeUpdated)!;
+    } else {
+      newSynonymSet = this.synonymMap.get(synonymWord)!;
+      this.synonymMap.set(wordToBeUpdated, newSynonymSet);
+    }
     return newSynonymSet;
   }
   
   public deleteWord = (word: string): void => {
     if (this.synonymMap.delete(word)) {
-      if (process.env.NODE_ENV === 'dev') Logger.getInstance().logger.debug(word + " was deleted");
+      if (process.env.NODE_ENV === 'development') Logger.getInstance().logger.debug(word + ' was deleted');
       return;
     }
     else {
-      throw new Error(word + " was not found");
+      throw new Error(word + ' was not found');
     }
   }
   
