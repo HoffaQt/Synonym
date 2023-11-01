@@ -8,7 +8,10 @@
     "build": "tsc",
     "serve": "node dist/index.js",
     "dev": "nodemon",
-    "test": "ts-mocha tests/*.ts"
+    "test": "ts-mocha tests/*.ts",
+    "docker:build": "docker build -t synonymapp .",
+    "docker:run": "docker run -d -p 127.0.0.1:8080:3000 synonymapp",
+    "docker:stop": "docker stop synonymapp"
   },
   "nodemonConfig": {
     "watch": [
@@ -19,8 +22,13 @@
     "exec": "ts-node ./app.ts"
   },
   "mocha": {
-    "extension": ["ts"],
-    "node-option": ["experimental-specifier-resolution=node", "loader=ts-node/esm"],
+    "extension": [
+      "ts"
+    ],
+    "node-option": [
+      "experimental-specifier-resolution=node",
+      "loader=ts-node/esm"
+    ],
     "loader": "ts-node/esm",
     "spec": "tests/*.test.ts",
     "timeout": "5000"

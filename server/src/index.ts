@@ -6,7 +6,7 @@ import { routeNotFoundError, serverError } from './middleware/errors.middleware'
 // Seperate the app from the server configuration and initialization for
 // seperation of concerns, maintainability and ease of testing
 const app: Application = express();
-const originUrl = process.env.API_URL + ':' + process.env.PORT || 'http://localhost:8080';
+const originUrl = process.env.API_URL || 'http://localhost:8080';
 app.use(express.json());
 app.use(
   cors({
